@@ -24,8 +24,7 @@ public class POSController implements ActionListener
 {
 	private static final String APPNAME = "Program Of Study";
 	
-	private List<List<Course>> courseList;
-	private List<StudentCourse> posList;
+//	private List<StudentCourse> posList;
 	private JFrame posFrame;
 	private JPanel posContentPane;
 	private POSMenuBar menuBar;
@@ -76,9 +75,9 @@ public class POSController implements ActionListener
             }
         }
 		//initialize class variables
-		courseList = new ArrayList<List<Course>>();
-		posList = new ArrayList<StudentCourse>();
-		
+//		courseList = new ArrayList<List<Course>>();
+//		posList = new ArrayList<StudentCourse>();
+/*		
 		//read courses from .dat file for each concentration
 		for(Concentration c: Concentration.values())
 		{
@@ -93,9 +92,9 @@ public class POSController implements ActionListener
 				e.printStackTrace();
 			}
 		}
-		
-		courseTM = new CourseTableModel(courseList);
-		posTM = new POSTableModel(posList);
+*/		
+		courseTM = new CourseTableModel();
+		posTM = new POSTableModel();
 		
 		createAndShowView();
 		
@@ -159,21 +158,6 @@ public class POSController implements ActionListener
         return posView;
     }
 	
-	private void createandshowGUI()
-	{
-        //Create the menu bar and set action listener for each menu item
-        menuBar = new POSMenuBar();
-        posFrame.setJMenuBar(menuBar);
-        
-//      MenuItemListener menuItemListener = new MenuItemListener();
-        
-//        POSMenuBar.newMI.addActionListener(menuItemListener);
-//        POSMenuBar.openMI.addActionListener(menuItemListener);
-//        POSMenuBar.saveMI.addActionListener(menuItemListener);
-//        POSMenuBar.saveAsMI.addActionListener(menuItemListener);
-//        POSMenuBar.exitMI.addActionListener(menuItemListener);       
-	}
-	
 	void exit(String command)
 	{
 	   	System.exit(0);
@@ -216,8 +200,7 @@ public class POSController implements ActionListener
 			
 			if(modelRow > -1)
 			{
-				Concentration concentration = courseTM.getConcentration();
-				Course selCourse = courseList.get(concentration.index()).get(modelRow);
+				Course selCourse = courseTM.getCourse(modelRow);
 				System.out.println(selCourse.getTitle() + " added");
 				StudentCourse sc = new StudentCourse(selCourse);
 				posTM.addCourse(sc);
@@ -229,7 +212,7 @@ public class POSController implements ActionListener
 			
 			if(modelRow > -1)
 			{
-				StudentCourse selCourse = posList.get(modelRow);
+				StudentCourse selCourse = posTM.getStudentCourse(modelRow);
 				System.out.println(selCourse.getTitle() + " removed");
 				posTM.removeCourse(selCourse);
 			}

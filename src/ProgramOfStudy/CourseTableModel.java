@@ -1,5 +1,9 @@
 package ProgramOfStudy;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
@@ -20,14 +24,33 @@ public class CourseTableModel extends AbstractTableModel
 	private Concentration concentration;
 	private List<List<Course>> courseList;
 	
-	public CourseTableModel(List<List<Course>> courseList)
+	public CourseTableModel()
 	{
-		this.courseList = courseList;
+		this.courseList = new ArrayList<List<Course>>();
+		
+		//read courses from .dat file for each concentration
+		for(Concentration c: Concentration.values())
+		{
+			try
+			{
+				List<Course> currList = readConcentrationFromDisk(c);
+				courseList.add(currList);
+			}
+			catch (IOException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		this.concentration = Concentration.InformationSystems;
 	}
 	
 	//getters
-	Concentration getConcentration() { return concentration; }
+//	Concentration getConcentration() { return concentration; }
+	Course getCourse(int row)
+	{
+		return courseList.get(concentration.index()).get(row);
+	}
 	
 	//setters
 	void setConcentration(Concentration c)
@@ -37,6 +60,29 @@ public class CourseTableModel extends AbstractTableModel
 			this.concentration = c;
 			fireTableDataChanged();
 		}
+	}
+	
+	List<Course> readConcentrationFromDisk(Concentration c) throws IOException
+	{
+		List<Course> courseList = new ArrayList<Course>();
+		
+		String filename = System.getProperty("user.dir") + "/" + c.toString() + ".dat";
+		BufferedReader br = new BufferedReader(new FileReader(filename));
+	    try
+	    {
+	    	String line;
+	        while ((line = br.readLine()) != null)
+	        {
+	        	courseList.add(new Course(line));
+	        	line = br.readLine();
+	        }
+	    }
+	    finally 
+	    {
+	        br.close();
+	    }
+		
+		return courseList;
 	}
 	
 	@Override

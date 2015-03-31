@@ -1,5 +1,6 @@
 package ProgramOfStudy;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
@@ -20,9 +21,14 @@ public class POSTableModel extends AbstractTableModel
 	private String[] columnNames = {"Sem", "Dept", "#", "Hrs", "Title", "Grade"};
 	private List<StudentCourse> posList;
 	
-	public POSTableModel(List<StudentCourse> posList)
+	public POSTableModel()
 	{
-		this.posList = posList;
+		posList = new ArrayList<StudentCourse>();
+	}
+	
+	StudentCourse getStudentCourse(int row)
+	{
+		return posList.get(row);
 	}
 	
 	void addCourse(StudentCourse sc)

@@ -28,7 +28,7 @@ public class POSView extends JPanel implements ListSelectionListener
 	private POSTable courseTable, posTable;
 	public JButton btnAdd, btnRemove;
 	private JButton btnResetCourseFilter, btnResetPOSFilter;
-	public JComboBox concentrationCB, courseNumCB, deptCB, titleCB;
+	public JComboBox concentrationCB, semesterCB, courseNumCB, deptCB, titleCB;
 	
 	public POSView(CourseTableModel courseTM, POSTableModel posTM)
 	{
@@ -104,6 +104,11 @@ public class POSView extends JPanel implements ListSelectionListener
 		
 		JPanel posFilterPanel = new JPanel();
 		posFilterPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+		
+		String[] semesters = {"0", "1", "2", "3", "4", "5", "6", "7"};
+		semesterCB = new JComboBox(semesters);
+		semesterCB.setBorder(BorderFactory.createTitledBorder("Semester"));
+		posFilterPanel.add(semesterCB);
 		
 		courseNumCB = new JComboBox();
 		courseNumCB.setBorder(BorderFactory.createTitledBorder("Course #"));
