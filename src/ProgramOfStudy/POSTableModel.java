@@ -40,7 +40,7 @@ public class POSTableModel extends AbstractTableModel
 	void removeCourse(StudentCourse sc)
 	{
 		int index = 0;
-		while(index < posList.size() && posList.get(index).equals(sc))
+		while(index < posList.size() && !posList.get(index).equals(sc))
 			index++;
 		
 		if(index < posList.size())
@@ -81,12 +81,14 @@ public class POSTableModel extends AbstractTableModel
 			return "Error";
 	}
 	
-	 //JTable uses this method to determine the default renderer/editor for each cell.
+	//JTable uses this method to determine the default renderer/editor for each cell.
     @Override
     public Class<?> getColumnClass(int column)
     {
     	if(column == SEMESTER_COL || column == NUM_COL || column == HOURS_COL)
     		return Integer.class;
+    	else if(column == GRADE_COL)
+    		return Character.class;
     	else
     		return String.class;
     }
