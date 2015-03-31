@@ -63,8 +63,8 @@ public class POSController implements ActionListener
             {
                 // Generate and register the OSXAdapter, passing it a hash of all the methods we wish to
                 // use as delegates for various com.apple.eawt.ApplicationListener methods
- //             OSXAdapter.setQuitHandler(this, getClass().getDeclaredMethod("quit", (Class[])null));
- //             OSXAdapter.setAboutHandler(this,getClass().getDeclaredMethod("about", (Class[])null));
+            	OSXAdapter.setQuitHandler(this, getClass().getDeclaredMethod("quit", (Class[])null));
+            	OSXAdapter.setAboutHandler(this,getClass().getDeclaredMethod("about", (Class[])null));
  //             OSXAdapter.setPreferencesHandler(this, getClass().getDeclaredMethod("preferences", (Class[])null));
  //             OSXAdapter.setFileHandler(this, getClass().getDeclaredMethod("loadImageFile", new Class[] { String.class }));
             } 
@@ -145,7 +145,8 @@ public class POSController implements ActionListener
         POSMenuBar.exitMI.addActionListener(menuItemListener);
         
         //Create a content panel for the frame and add components to it.
-        posContentPane = new JPanel();
+//      posContentPane = new JPanel();
+        posContentPane = (JPanel) posFrame.getContentPane();
         posContentPane.setLayout(new BoxLayout(posContentPane, BoxLayout.PAGE_AXIS));
         
         //Create the view

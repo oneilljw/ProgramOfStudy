@@ -42,6 +42,7 @@ public class CourseTableModel extends AbstractTableModel
 				e.printStackTrace();
 			}
 		}
+		
 		this.concentration = Concentration.InformationSystems;
 	}
 	
