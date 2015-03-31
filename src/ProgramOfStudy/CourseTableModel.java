@@ -26,6 +26,9 @@ public class CourseTableModel extends AbstractTableModel
 		this.concentration = Concentration.InformationSystems;
 	}
 	
+	//getters
+	Concentration getConcentration() { return concentration; }
+	
 	//setters
 	void setConcentration(Concentration c)
 	{

@@ -12,10 +12,12 @@ import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
 
-public class POSView extends JPanel
+public class POSView extends JPanel implements ListSelectionListener
 {
 
 	/**
@@ -24,10 +26,11 @@ public class POSView extends JPanel
 	private static final long serialVersionUID = 1L;
 	
 	private POSTable courseTable, posTable;
-	private JButton btnAdd, btnRemove, btnResetCourseFilter, btnResetPOSFilter;
-	public JComboBox concentrationCB, courseNumCB, deptCB;
+	public JButton btnAdd, btnRemove;
+	private JButton btnResetCourseFilter, btnResetPOSFilter;
+	public JComboBox concentrationCB, courseNumCB, deptCB, titleCB;
 	
-	public POSView(CourseTableModel courseTM)
+	public POSView(CourseTableModel courseTM, POSTableModel posTM)
 	{
 		JPanel coursePanel = new JPanel();
 		JPanel cntlPanel = new JPanel();
@@ -47,7 +50,7 @@ public class POSView extends JPanel
 		courseTable = new POSTable(courseTM, courseTableTT, new Color(240,248,255));
 
 		courseTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-//		courseTable.getSelectionModel().addListSelectionListener(this);
+		courseTable.getSelectionModel().addListSelectionListener(this);
 		
 		//Set table column widths
 		int tablewidth = 0;
@@ -77,7 +80,7 @@ public class POSView extends JPanel
         //set up the course panel reset filter button
         JPanel resetPanel = new JPanel();
         resetPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        btnResetCourseFilter = new JButton("Reset Filters");
+        btnResetCourseFilter = new JButton("Reset Catalog Filters");
         resetPanel.add(btnResetCourseFilter);
          
         coursePanel.add(couseFilterPanel);
@@ -100,20 +103,29 @@ public class POSView extends JPanel
 		posPanel.setBorder(BorderFactory.createTitledBorder("Student Program of Study"));
 		
 		JPanel posFilterPanel = new JPanel();
-		couseFilterPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-		concentrationCB = new JComboBox(Concentration.values());
-		concentrationCB.setBorder(BorderFactory.createTitledBorder("Concentration"));
-		couseFilterPanel.add(concentrationCB);
+		posFilterPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+		
+		courseNumCB = new JComboBox();
+		courseNumCB.setBorder(BorderFactory.createTitledBorder("Course #"));
+		posFilterPanel.add(courseNumCB);
+		
+		deptCB = new JComboBox();
+		deptCB.setBorder(BorderFactory.createTitledBorder("Dept"));
+		posFilterPanel.add(deptCB);
+		
+		titleCB = new JComboBox();
+		titleCB.setBorder(BorderFactory.createTitledBorder("Title"));
+		posFilterPanel.add(titleCB);
 		
 		String[] posTableTT = {"Semester", "Department", "Course #", "Credit Hours", "Couurse Title", "Grade"};
-//		posTable = new POSTable(posTM, posTableTT, new Color(240,248,255));
+		posTable = new POSTable(posTM, posTableTT, new Color(240,248,255));
 
 		posTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-//		posTable.getSelectionModel().addListSelectionListener(this);
+		posTable.getSelectionModel().addListSelectionListener(this);
 		
 		//Set table column widths
 		tablewidth = 0;
-		int[] posColWidths = {32, 48, 32, 48, 160};
+		int[] posColWidths = {32, 48, 32, 48, 160, 40};
 		for(int col=0; col < posColWidths.length; col++)
 		{
 			posTable.getColumnModel().getColumn(col).setPreferredWidth(posColWidths[col]);
@@ -121,14 +133,14 @@ public class POSView extends JPanel
 		}
 		tablewidth += 24; 	//count for vertical scroll bar
 		
-        courseTable.setAutoCreateRowSorter(true);	//add a sorter
+        posTable.setAutoCreateRowSorter(true);	//add a sorter
         
-//      JTableHeader anHeader = courseTable.getTableHeader();
-//      anHeader.setForeground( Color.black);
-//      anHeader.setBackground( new Color(161,202,241));
+        anHeader = posTable.getTableHeader();
+        anHeader.setForeground( Color.black);
+        anHeader.setBackground( new Color(161,202,241));
         
         //left justify wish count column
-//        DefaultTableCellRenderer dtcr = new DefaultTableCellRenderer();
+//      DefaultTableCellRenderer dtcr = new DefaultTableCellRenderer();
         dtcr.setHorizontalAlignment(SwingConstants.LEFT);
         courseTable.getColumnModel().getColumn(0).setCellRenderer(dtcr);
         
@@ -139,8 +151,8 @@ public class POSView extends JPanel
         //set up the course panel reset filter button
         JPanel posResetPanel = new JPanel();
         posResetPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        btnResetPOSFilter = new JButton("Reset Filters");
-        resetPanel.add(btnResetPOSFilter);
+        btnResetPOSFilter = new JButton("Reset POS Filters");
+        posResetPanel.add(btnResetPOSFilter);
          
         posPanel.add(posFilterPanel);
         posPanel.add(posScrollPane);
@@ -149,5 +161,48 @@ public class POSView extends JPanel
         this.add(coursePanel);
         this.add(cntlPanel);
         this.add(posPanel);
+	}
+	
+	int getSelectedCourseRow()
+	{
+		int courseTableRow = courseTable.getSelectedRow();
+		if(courseTableRow > -1)
+			return courseTable.convertRowIndexToModel(courseTable.getSelectedRow());
+		else
+			return -1;
+	}
+	
+	int getSelectedPOSRow()
+	{
+		int posTableRow = posTable.getSelectedRow();
+		if(posTableRow > -1)
+			return posTable.convertRowIndexToModel(posTable.getSelectedRow());
+		else
+			return -1;
+	}
+
+	@Override
+	public void valueChanged(ListSelectionEvent lse)
+	{
+		if(lse.getSource() == courseTable.getSelectionModel())
+		{
+			int modelRow = courseTable.getSelectedRow() == -1 ? -1 : 
+						courseTable.convertRowIndexToModel(courseTable.getSelectedRow());
+		
+			if(modelRow > -1)
+				btnAdd.setEnabled(true);
+			else
+				btnAdd.setEnabled(false);
+		}
+		else if(lse.getSource() == posTable.getSelectionModel())
+		{
+			int modelRow = posTable.getSelectedRow() == -1 ? -1 : 
+						posTable.convertRowIndexToModel(posTable.getSelectedRow());
+		
+			if(modelRow > -1)
+				btnRemove.setEnabled(true);
+			else
+				btnRemove.setEnabled(false);
+		}
 	}
 }

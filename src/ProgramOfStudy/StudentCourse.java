@@ -11,6 +11,13 @@ public class StudentCourse extends Course
 		this.grade = grade;
 	}
 	
+	public StudentCourse(Course course)
+{
+		super(course.getSemester(), course.getDepartment(), course.getNumber(), 
+				course.getCreditHours(), course.getTitle());
+		this.grade = 'N';
+}
+	
 	//getters
 	char getGrade() { return grade; }
 	

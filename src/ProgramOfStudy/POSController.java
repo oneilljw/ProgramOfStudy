@@ -19,17 +19,19 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+
 public class POSController implements ActionListener
 {
 	private static final String APPNAME = "Program Of Study";
 	
 	private List<List<Course>> courseList;
-	private List<Course> posList;
+	private List<StudentCourse> posList;
 	private JFrame posFrame;
 	private JPanel posContentPane;
 	private POSMenuBar menuBar;
 	private POSView posView;
 	private CourseTableModel courseTM;
+	private POSTableModel posTM;
 	
 	//Check if we are on Mac OS X.  This is crucial to loading and using the OSXAdapter class.
     private static boolean MAC_OS_X = (System.getProperty("os.name").toLowerCase().startsWith("mac os x"));
@@ -75,6 +77,7 @@ public class POSController implements ActionListener
         }
 		//initialize class variables
 		courseList = new ArrayList<List<Course>>();
+		posList = new ArrayList<StudentCourse>();
 		
 		//read courses from .dat file for each concentration
 		for(Concentration c: Concentration.values())
@@ -92,9 +95,14 @@ public class POSController implements ActionListener
 		}
 		
 		courseTM = new CourseTableModel(courseList);
+		posTM = new POSTableModel(posList);
+		
 		createAndShowView();
 		
-		posView.concentrationCB.addActionListener(this);	
+		//add the listeners to the view components
+		posView.concentrationCB.addActionListener(this);
+		posView.btnAdd.addActionListener(this);
+		posView.btnRemove.addActionListener(this);
 		
 	}
 	
@@ -124,19 +132,25 @@ public class POSController implements ActionListener
 				exit("QUIT");			  
 			 }});
         posFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);	//On close, user is prompted to confirm
-        posFrame.setMinimumSize(new Dimension(832, 660));
+        posFrame.setMinimumSize(new Dimension(1050, 600));
         posFrame.setLocationByPlatform(true);
         
         //Create the menu bar and set action listener for each menu item
         menuBar = new POSMenuBar();
         posFrame.setJMenuBar(menuBar);
+        MenuItemListener menuItemListener = new MenuItemListener();
+        POSMenuBar.newMI.addActionListener(menuItemListener);
+        POSMenuBar.openMI.addActionListener(menuItemListener);
+        POSMenuBar.saveMI.addActionListener(menuItemListener);
+        POSMenuBar.saveAsMI.addActionListener(menuItemListener);
+        POSMenuBar.exitMI.addActionListener(menuItemListener);
         
         //Create a content panel for the frame and add components to it.
         posContentPane = new JPanel();
         posContentPane.setLayout(new BoxLayout(posContentPane, BoxLayout.PAGE_AXIS));
         
         //Create the view
-        posView = new POSView(courseTM);
+        posView = new POSView(courseTM, posTM);
         posContentPane.add(posView);
         
         posFrame.setContentPane(posContentPane); 
@@ -192,12 +206,33 @@ public class POSController implements ActionListener
 	public void actionPerformed(ActionEvent e)
 	{
 		if(e.getSource() == posView.concentrationCB)
-		{
-			System.out.println("Concentration Selected: " + 
-						posView.concentrationCB.getSelectedItem().toString());
-			
+		{	
 			Concentration c = (Concentration) posView.concentrationCB.getSelectedItem();
 			courseTM.setConcentration(c);
+		}
+		else if(e.getSource() == posView.btnAdd)
+		{
+			int modelRow = posView.getSelectedCourseRow();
+			
+			if(modelRow > -1)
+			{
+				Concentration concentration = courseTM.getConcentration();
+				Course selCourse = courseList.get(concentration.index()).get(modelRow);
+				System.out.println(selCourse.getTitle() + " added");
+				StudentCourse sc = new StudentCourse(selCourse);
+				posTM.addCourse(sc);
+			}
+		}
+		else if(e.getSource() == posView.btnRemove)
+		{
+			int modelRow = posView.getSelectedPOSRow();
+			
+			if(modelRow > -1)
+			{
+				StudentCourse selCourse = posList.get(modelRow);
+				System.out.println(selCourse.getTitle() + " removed");
+				posTM.removeCourse(selCourse);
+			}
 		}
 	}
 
@@ -205,9 +240,18 @@ public class POSController implements ActionListener
 	{
 		SwingUtilities.invokeLater(new Runnable() {
             public void run() { new POSController(); }
-     });
-
+		});
 	}
-
 	
+	private class MenuItemListener implements ActionListener
+    {
+    	public void actionPerformed(ActionEvent e)
+    	{
+    		if(e.getSource() == POSMenuBar.newMI) { System.out.println("New Menu Item Clicked"); }
+    		else if(e.getSource() == POSMenuBar.openMI) { System.out.println("Open Menu Item Clicked"); }
+    		else if(e.getSource() == POSMenuBar.saveMI) { System.out.println("Save Menu Item Clicked"); }
+    		else if(e.getSource() == POSMenuBar.saveAsMI) { System.out.println("SaveAs Menu Item Clicked"); }
+    		else if(e.getSource() == POSMenuBar.exitMI) { System.out.println("Exit Menu Item Clicked"); }
+    	}
+    }
 }

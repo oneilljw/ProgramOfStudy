@@ -25,6 +25,24 @@ public class POSTableModel extends AbstractTableModel
 		this.posList = posList;
 	}
 	
+	void addCourse(StudentCourse sc)
+	{
+		posList.add(sc);
+		this.fireTableDataChanged();
+	}
+	
+	void removeCourse(StudentCourse sc)
+	{
+		int index = 0;
+		while(index < posList.size() && posList.get(index).equals(sc))
+			index++;
+		
+		if(index < posList.size())
+		{
+			posList.remove(index);
+			this.fireTableDataChanged();
+		}	
+	}
 	
 	@Override
 	public int getColumnCount() { return columnNames.length; }

@@ -1,0 +1,23 @@
+0 Core 101 3 University Core A: Core 101	
+0 ITEC 110 3 Introduction to Information Technology
+0 ITEC 120 4 Principles of Computer Science I
+0 MATH 151 3 Calculus  and Analytic Geometry I
+0 UNIV 100 1 University 100
+1 Core 102 3 University Core A: Core 102	
+1 ITEC 122 3 Discrete Mathematics
+1 ITEC 220 4 Principles of Computer Science II
+1 MATH 152 3 Calculus  and Analytic Geometry II
+2 Core 201 3 University Core A: Core 201
+2 ITEC 324 3 Principles of Computer Science III
+2 ITEC 225 3 Principles of Web Development I
+2 ITEC 345 3 Introduction to Information Security
+3 Core 202 3 University Core A: Core 202
+3 ITEC 310 3 Programming in C and Unix
+3 ITEC 350 3 Networks I
+4 ITEC 352 3 Computer Organization
+4 STAT 301 3 Probability and Statistics I
+4 ITEC 340 3 Database I
+5 ITEC 371 3 Operating Systems
+5 ITEC 451 3 Networks II
+6 ITEC 452 3 Networks III
+6 ITEC 490 1 Senior Seminar
