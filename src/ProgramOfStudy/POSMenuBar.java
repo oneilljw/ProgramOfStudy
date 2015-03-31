@@ -41,7 +41,7 @@ public class POSMenuBar extends JMenuBar
 	    menuFile.add(saveAsMI);
 	    
 	    //add open menu item to File menu
-	    saveAsMI = new JMenuItem("Exit");
+	    exitMI = new JMenuItem("Exit");
 	    menuFile.add(exitMI);
 	}
 }

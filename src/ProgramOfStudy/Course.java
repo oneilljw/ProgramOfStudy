@@ -16,6 +16,17 @@ public class Course
 		this.creditHours = creditHours;
 		this.title = title;
 	}
+	
+	public Course(String fileLine)
+	{
+		String[] coursePart = fileLine.split(" ", 5);
+		
+		this.semester = Integer.parseInt(coursePart[0]);
+		this.department = coursePart[1];
+		this.number = Integer.parseInt(coursePart[2]);
+		this.creditHours = Integer.parseInt(coursePart[3]);
+		this.title = coursePart[4];
+	}
 
 	/**
 	 * @return the semester
@@ -86,6 +97,4 @@ public class Course
 	void setTitle(String title) {
 		this.title = title;
 	}
-	
-	
 }

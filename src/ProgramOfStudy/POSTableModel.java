@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
-public class CourseTableModel extends AbstractTableModel
+public class POSTableModel extends AbstractTableModel
 {
 	/**
 	 * 
@@ -15,26 +15,16 @@ public class CourseTableModel extends AbstractTableModel
 	private static final int NUM_COL = 2;
 	private static final int HOURS_COL = 3;
 	private static final int TITLE_COL = 4;
+	private static final int GRADE_COL = 5;
 	
-	private String[] columnNames = {"Sem", "Dept", "#", "Hrs", "Title"};
-	private Concentration concentration;
-	private List<List<Course>> courseList;
+	private String[] columnNames = {"Sem", "Dept", "#", "Hrs", "Title", "Grade"};
+	private List<StudentCourse> posList;
 	
-	public CourseTableModel(List<List<Course>> courseList)
+	public POSTableModel(List<StudentCourse> posList)
 	{
-		this.courseList = courseList;
-		this.concentration = Concentration.InformationSystems;
+		this.posList = posList;
 	}
 	
-	//setters
-	void setConcentration(Concentration c)
-	{
-		if(this.concentration != c)
-		{
-			this.concentration = c;
-			fireTableDataChanged();
-		}
-	}
 	
 	@Override
 	public int getColumnCount() { return columnNames.length; }
@@ -45,22 +35,24 @@ public class CourseTableModel extends AbstractTableModel
 	@Override
 	public int getRowCount()
 	{ 
-		return courseList.get(concentration.index()).size();
+		return posList.size();
 	}
 		
 	@Override
 	public Object getValueAt(int row, int col)
 	{
 		if(col == SEMESTER_COL)  
-			return courseList.get(concentration.index()).get(row).getSemester();
+			return posList.get(row).getSemester();
 		else if(col == DEPT_COL)
-			return courseList.get(concentration.index()).get(row).getDepartment();
+			return posList.get(row).getDepartment();
 		else if (col == NUM_COL)
-			return courseList.get(concentration.index()).get(row).getNumber();
+			return posList.get(row).getNumber();
 		else if (col == HOURS_COL)
-			return courseList.get(concentration.index()).get(row).getCreditHours();
+			return posList.get(row).getCreditHours();
 		else if (col == TITLE_COL)
-			return courseList.get(concentration.index()).get(row).getTitle();
+			return posList.get(row).getTitle();
+		else if(col == GRADE_COL)
+			return posList.get(row).getGrade();
 		else
 			return "Error";
 	}
@@ -74,4 +66,5 @@ public class CourseTableModel extends AbstractTableModel
     	else
     		return String.class;
     }
+
 }
