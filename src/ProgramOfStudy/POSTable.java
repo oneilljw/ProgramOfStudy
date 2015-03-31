@@ -8,7 +8,6 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 
-
 public class POSTable extends javax.swing.JTable
 {
 	private static final long serialVersionUID = 1L;
@@ -54,13 +53,4 @@ public class POSTable extends javax.swing.JTable
 			  
 		return comp;
 	}
-	
-	@Override
-	public Class getColumnClass(int column)
-    {
-		if(getRowCount() > 0)
-			return getValueAt(0, column).getClass();
-		else
-			return Object.class;
-    }
 }

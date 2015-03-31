@@ -47,22 +47,27 @@ public class CourseTableModel extends AbstractTableModel
 	}
 	
 	//getters
-//	Concentration getConcentration() { return concentration; }
-	Course getCourse(int row)
-	{
-		return courseList.get(concentration.index()).get(row);
-	}
+	Course getCourse(int row) { return courseList.get(concentration.index()).get(row); }
 	
 	//setters
-	void setConcentration(Concentration c)
+	void setConcentration(Concentration newConcentration)
 	{
-		if(this.concentration != c)
+		//only update if the current concentration is changing
+		if(this.concentration != newConcentration)
 		{
-			this.concentration = c;
+			this.concentration = newConcentration;
 			fireTableDataChanged();
 		}
 	}
 	
+	/***
+	 * Reads a .dat file that contains a list of Courses. In this app, there are 6 different
+	 * .dat files, one for each concentration. The concentrations are Information Systems,
+	 * Web Development, Computer Science, Database, Networks and Software Engineering
+	 * @param c
+	 * @return List of Courses
+	 * @throws IOException
+	 */
 	List<Course> readConcentrationFromDisk(Concentration c) throws IOException
 	{
 		List<Course> courseList = new ArrayList<Course>();
@@ -93,10 +98,7 @@ public class CourseTableModel extends AbstractTableModel
 	public String getColumnName(int col) { return columnNames[col]; }
 	 
 	@Override
-	public int getRowCount()
-	{ 
-		return courseList.get(concentration.index()).size();
-	}
+	public int getRowCount() { return courseList.get(concentration.index()).size(); }
 		
 	@Override
 	public Object getValueAt(int row, int col)

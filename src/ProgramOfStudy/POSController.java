@@ -24,11 +24,12 @@ public class POSController implements ActionListener
 {
 	private static final String APPNAME = "Program Of Study";
 	
-//	private List<StudentCourse> posList;
+	//view components
 	private JFrame posFrame;
-	private JPanel posContentPane;
 	private POSMenuBar menuBar;
 	private POSView posView;
+	
+	//controller components - use the Course and StudentCourse model classes
 	private CourseTableModel courseTM;
 	private POSTableModel posTM;
 	
@@ -74,34 +75,17 @@ public class POSController implements ActionListener
                 e.printStackTrace();
             }
         }
-		//initialize class variables
-//		courseList = new ArrayList<List<Course>>();
-//		posList = new ArrayList<StudentCourse>();
-/*		
-		//read courses from .dat file for each concentration
-		for(Concentration c: Concentration.values())
-		{
-			try
-			{
-				List<Course> currList = readConcentrationFromDisk(c);
-				courseList.add(currList);
-			}
-			catch (IOException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-*/		
+		//initialize controller components
 		courseTM = new CourseTableModel();
 		posTM = new POSTableModel();
 		
+		//initialize view component
 		createAndShowView();
 		
 		//add the listeners to the view components
-		posView.concentrationCB.addActionListener(this);
-		posView.btnAdd.addActionListener(this);
-		posView.btnRemove.addActionListener(this);
+//		posView.concentrationCB.addActionListener(this);
+//		posView.btnAdd.addActionListener(this);
+//		posView.btnRemove.addActionListener(this);
 		
 	}
 	
@@ -122,7 +106,7 @@ public class POSController implements ActionListener
 										JOptionPane.INFORMATION_MESSAGE);
     }
 	
-	POSView createAndShowView()
+	void createAndShowView()
     {
     	posFrame = new JFrame(APPNAME);
 		posFrame.addWindowListener(new WindowAdapter() {
@@ -144,19 +128,20 @@ public class POSController implements ActionListener
         POSMenuBar.saveAsMI.addActionListener(menuItemListener);
         POSMenuBar.exitMI.addActionListener(menuItemListener);
         
-        //Create a content panel for the frame and add components to it.
-//      posContentPane = new JPanel();
-        posContentPane = (JPanel) posFrame.getContentPane();
+        //Fetch the content panel for the frame and add components to it.
+        JPanel posContentPane = (JPanel) posFrame.getContentPane();
         posContentPane.setLayout(new BoxLayout(posContentPane, BoxLayout.PAGE_AXIS));
         
-        //Create the view
+        //Create the view and add controller listeners to view events
         posView = new POSView(courseTM, posTM);
+      	posView.concentrationCB.addActionListener(this);
+      	posView.btnAdd.addActionListener(this);
+      	posView.btnRemove.addActionListener(this);
         posContentPane.add(posView);
         
+        //set the content for the frame and make visible
         posFrame.setContentPane(posContentPane); 
         posFrame.setVisible(true);
-        
-        return posView;
     }
 	
 	void exit(String command)
@@ -199,10 +184,9 @@ public class POSController implements ActionListener
 		{
 			int modelRow = posView.getSelectedCourseRow();
 			
-			if(modelRow > -1)
+			if(modelRow > -1)	//ensure the row exists
 			{
 				Course selCourse = courseTM.getCourse(modelRow);
-				System.out.println(selCourse.getTitle() + " added");
 				StudentCourse sc = new StudentCourse(selCourse);
 				posTM.addCourse(sc);
 			}
@@ -211,10 +195,9 @@ public class POSController implements ActionListener
 		{
 			int modelRow = posView.getSelectedPOSRow();
 			
-			if(modelRow > -1)
+			if(modelRow > -1)	//ensure the row exists
 			{
 				StudentCourse selCourse = posTM.getStudentCourse(modelRow);
-				System.out.println(selCourse.getTitle() + " removed");
 				posTM.removeCourse(selCourse);
 			}
 		}
