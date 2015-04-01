@@ -116,14 +116,4 @@ public class CourseTableModel extends AbstractTableModel
 		else
 			return "Error";
 	}
-	
-	 //JTable uses this method to determine the default renderer/editor for each cell.
-    @Override
-    public Class<?> getColumnClass(int column)
-    {
-    	if(column == SEMESTER_COL || column == NUM_COL || column == HOURS_COL)
-    		return Integer.class;
-    	else
-    		return String.class;
-    }
 }

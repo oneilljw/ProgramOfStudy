@@ -1,12 +1,14 @@
 package ProgramOfStudy;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
@@ -24,6 +26,7 @@ public class POSView extends JPanel implements ListSelectionListener
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private static final int PREFERRED_NUMBER_OF_TABLE_ROWS = 15;
 	
 	private POSTable courseTable, posTable;
 	public JButton btnAdd, btnRemove, btnOpen, btnSave, btnExit;
@@ -40,11 +43,11 @@ public class POSView extends JPanel implements ListSelectionListener
 		coursePanel.setLayout(new BoxLayout(coursePanel, BoxLayout.Y_AXIS));
 		coursePanel.setBorder(BorderFactory.createTitledBorder("Course Catalog"));
 		
-		JPanel couseFilterPanel = new JPanel();
-		couseFilterPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-		concentrationCB = new JComboBox(Concentration.values());
-		concentrationCB.setBorder(BorderFactory.createTitledBorder("Concentration"));
-		couseFilterPanel.add(concentrationCB);
+		JPanel couseSearchPanel = new JPanel();
+		couseSearchPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+		JComboBox aconcentrationCB = new JComboBox(Concentration.values());
+		aconcentrationCB.setBorder(BorderFactory.createTitledBorder("Concentration"));
+		couseSearchPanel.add(aconcentrationCB);
 		
 		String[] courseTableTT = {"Semester", "Department", "Course #", "Credit Hours", "Couurse Title"};
 		courseTable = new POSTable(courseTM, courseTableTT, new Color(240,248,255));
@@ -54,7 +57,7 @@ public class POSView extends JPanel implements ListSelectionListener
 		
 		//Set table column widths
 		int tablewidth = 0;
-		int[] colWidths = {32, 40, 32, 48, 180};
+		int[] colWidths = {28, 36, 28, 28, 200};
 		for(int col=0; col < colWidths.length; col++)
 		{
 			courseTable.getColumnModel().getColumn(col).setPreferredWidth(colWidths[col]);
@@ -68,24 +71,30 @@ public class POSView extends JPanel implements ListSelectionListener
         anHeader.setForeground( Color.black);
         anHeader.setBackground( new Color(161,202,241));
         
-        //left justify wish count column
+        //justify column
         DefaultTableCellRenderer dtcr = new DefaultTableCellRenderer();
-        dtcr.setHorizontalAlignment(SwingConstants.LEFT);
+        dtcr.setHorizontalAlignment(SwingConstants.CENTER);
         courseTable.getColumnModel().getColumn(0).setCellRenderer(dtcr);
+        courseTable.getColumnModel().getColumn(3).setCellRenderer(dtcr);
         
-        //Create the scroll pane and add the table to it.
+        //Create the scroll pane and add the table to it
+        Dimension tablesize = new Dimension(tablewidth, courseTable.getRowHeight() *
+        										PREFERRED_NUMBER_OF_TABLE_ROWS);
+        courseTable.setPreferredScrollableViewportSize(tablesize);
         JScrollPane courseScrollPane = new JScrollPane(courseTable);
         courseScrollPane.setBorder(UIManager.getBorder("Table.scrollPaneBorder"));
         
         //set up the course panel reset filter button
-        JPanel resetPanel = new JPanel();
-        resetPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        btnResetCourseFilter = new JButton("Reset Catalog Filters");
-        resetPanel.add(btnResetCourseFilter);
+        JPanel concentrationPanel = new JPanel();
+        concentrationPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        JLabel lblConcentration = new JLabel("Select Concentration:");
+        concentrationCB = new JComboBox(Concentration.values());
+        concentrationPanel.add(lblConcentration);
+        concentrationPanel.add(concentrationCB);
          
-        coursePanel.add(couseFilterPanel);
+        coursePanel.add(couseSearchPanel);
         coursePanel.add(courseScrollPane);
-        coursePanel.add(resetPanel);
+        coursePanel.add(concentrationPanel);
         
         //set up the control panel
         cntlPanel.setLayout(new BoxLayout(cntlPanel, BoxLayout.Y_AXIS));
@@ -102,27 +111,28 @@ public class POSView extends JPanel implements ListSelectionListener
         posPanel.setLayout(new BoxLayout(posPanel, BoxLayout.Y_AXIS));
 		posPanel.setBorder(BorderFactory.createTitledBorder("Student Program of Study"));
 		
-		JPanel posFilterPanel = new JPanel();
-		posFilterPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+		JPanel posSearchPanel = new JPanel();
+		posSearchPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 		
 		String[] semesters = {"0", "1", "2", "3", "4", "5", "6", "7"};
 		semesterCB = new JComboBox(semesters);
 		semesterCB.setBorder(BorderFactory.createTitledBorder("Semester"));
-		posFilterPanel.add(semesterCB);
+		posSearchPanel.add(semesterCB);
 		
 		courseNumCB = new JComboBox();
 		courseNumCB.setBorder(BorderFactory.createTitledBorder("Course #"));
-		posFilterPanel.add(courseNumCB);
+		posSearchPanel.add(courseNumCB);
 		
 		deptCB = new JComboBox();
 		deptCB.setBorder(BorderFactory.createTitledBorder("Dept"));
-		posFilterPanel.add(deptCB);
+		posSearchPanel.add(deptCB);
 		
 		titleCB = new JComboBox();
 		titleCB.setBorder(BorderFactory.createTitledBorder("Title"));
-		posFilterPanel.add(titleCB);
+		posSearchPanel.add(titleCB);
 		
-		String[] posTableTT = {"Semester", "Department", "Course #", "Credit Hours", "Couurse Title", "Grade"};
+		String[] posTableTT = {"Semester", "Department", "Course #", "Credit Hours",
+								"Couurse Title", "Grade"};
 		posTable = new POSTable(posTM, posTableTT, new Color(240,248,255));
 
 		posTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -130,7 +140,7 @@ public class POSView extends JPanel implements ListSelectionListener
 		
 		//Set table column widths
 		tablewidth = 0;
-		int[] posColWidths = {32, 40, 32, 48, 180, 40};
+		int[] posColWidths = {28, 36, 28, 28, 200, 32};
 		for(int col=0; col < posColWidths.length; col++)
 		{
 			posTable.getColumnModel().getColumn(col).setPreferredWidth(posColWidths[col]);
@@ -140,18 +150,23 @@ public class POSView extends JPanel implements ListSelectionListener
 		
         posTable.setAutoCreateRowSorter(true);	//add a sorter
         
-        anHeader = posTable.getTableHeader();
-        anHeader.setForeground( Color.black);
-        anHeader.setBackground( new Color(161,202,241));
+        JTableHeader posHeader = posTable.getTableHeader();
+        posHeader.setForeground( Color.black);
+        posHeader.setBackground( new Color(161,202,241));
         
-        //left justify wish count column
-//      DefaultTableCellRenderer dtcr = new DefaultTableCellRenderer();
-        dtcr.setHorizontalAlignment(SwingConstants.LEFT);
-        courseTable.getColumnModel().getColumn(0).setCellRenderer(dtcr);
+        //justify columns
+        DefaultTableCellRenderer posdtcr = new DefaultTableCellRenderer();
+        posdtcr.setHorizontalAlignment(SwingConstants.CENTER);
+        posTable.getColumnModel().getColumn(0).setCellRenderer(posdtcr);
+        posTable.getColumnModel().getColumn(3).setCellRenderer(posdtcr);
+        posTable.getColumnModel().getColumn(5).setCellRenderer(posdtcr);
         
         //Create the scroll pane and add the table to it.
+        Dimension postablesize = new Dimension(tablewidth, posTable.getRowHeight() *
+        										PREFERRED_NUMBER_OF_TABLE_ROWS);
+        posTable.setPreferredScrollableViewportSize(postablesize);
         JScrollPane posScrollPane = new JScrollPane(posTable);
-        courseScrollPane.setBorder(UIManager.getBorder("Table.scrollPaneBorder"));
+        posScrollPane.setBorder(UIManager.getBorder("Table.scrollPaneBorder"));
         
         //set up the course panel reset filter button
         JPanel posResetPanel = new JPanel();
@@ -169,7 +184,7 @@ public class POSView extends JPanel implements ListSelectionListener
         btnResetPOSFilter = new JButton("Reset");
         posResetPanel.add(btnResetPOSFilter);
          
-        posPanel.add(posFilterPanel);
+        posPanel.add(posSearchPanel);
         posPanel.add(posScrollPane);
         posPanel.add(posResetPanel);
         

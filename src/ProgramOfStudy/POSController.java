@@ -1,6 +1,5 @@
 package ProgramOfStudy;
 
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -39,7 +38,7 @@ public class POSController implements ActionListener
 				exit("QUIT");			  
 			 }});
         posFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);	//On close, user is prompted to confirm
-        posFrame.setMinimumSize(new Dimension(1050, 600));
+//      posFrame.setMinimumSize(new Dimension(1050, 600));
         posFrame.setLocationByPlatform(true);
 
         //Fetch the content panel for the frame and add components to it.
@@ -57,7 +56,8 @@ public class POSController implements ActionListener
         posContentPane.add(posView);
         
         //set the content for the frame and make visible
-        posFrame.setContentPane(posContentPane); 
+        posFrame.setContentPane(posContentPane);
+        posFrame.pack();
         posFrame.setVisible(true);
     }
 	

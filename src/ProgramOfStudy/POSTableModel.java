@@ -7,7 +7,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
-
+import javax.swing.JOptionPane;
 import javax.swing.table.AbstractTableModel;
 
 public class POSTableModel extends AbstractTableModel
@@ -22,6 +22,7 @@ public class POSTableModel extends AbstractTableModel
 	private static final int HOURS_COL = 3;
 	private static final int TITLE_COL = 4;
 	private static final int GRADE_COL = 5;
+	private static final String VALID_GRADES = "ABCDEF";
 	
 	private String[] columnNames = {"Sem", "Dept", "#", "Hrs", "Title", "Grade"};
 	private List<StudentCourse> posList;
@@ -133,17 +134,29 @@ public class POSTableModel extends AbstractTableModel
 		else
 			return "Error";
 	}
-	
-	//JTable uses this method to determine the default renderer/editor for each cell.
-    @Override
-    public Class<?> getColumnClass(int column)
-    {
-    	if(column == SEMESTER_COL || column == NUM_COL || column == HOURS_COL)
-    		return Integer.class;
-    	else if(column == GRADE_COL)
-    		return Character.class;
-    	else
-    		return String.class;
-    }
 
+	@Override
+	public boolean isCellEditable(int row, int col)
+    {
+        return col == GRADE_COL;	//Only the grade column is editable
+    }
+	
+	//Don't need to implement this method unless your table's data can change.
+	@Override
+    public void setValueAt(Object value, int row, int col)
+    { 	
+    	//set the grade in the student course to the grade entered by the user
+    	//into the Program of Study table
+    	String grade = (String) value;
+    		
+    	//verify its a valid grade or else reset to the previous grade
+    	if(VALID_GRADES.contains(grade))
+    	{
+    		StudentCourse sc = posList.get(row);
+       		sc.setGrade(grade.charAt(0));
+    	}
+    	else	//indicate error and reset table to prior grade
+    	{
+    	}                      
+    }
 }
