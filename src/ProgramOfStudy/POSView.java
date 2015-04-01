@@ -26,7 +26,7 @@ public class POSView extends JPanel implements ListSelectionListener
 	private static final long serialVersionUID = 1L;
 	
 	private POSTable courseTable, posTable;
-	public JButton btnAdd, btnRemove;
+	public JButton btnAdd, btnRemove, btnOpen, btnSave, btnExit;
 	private JButton btnResetCourseFilter, btnResetPOSFilter;
 	public JComboBox concentrationCB, semesterCB, courseNumCB, deptCB, titleCB;
 	
@@ -54,7 +54,7 @@ public class POSView extends JPanel implements ListSelectionListener
 		
 		//Set table column widths
 		int tablewidth = 0;
-		int[] colWidths = {32, 48, 32, 48, 160};
+		int[] colWidths = {32, 40, 32, 48, 180};
 		for(int col=0; col < colWidths.length; col++)
 		{
 			courseTable.getColumnModel().getColumn(col).setPreferredWidth(colWidths[col]);
@@ -130,7 +130,7 @@ public class POSView extends JPanel implements ListSelectionListener
 		
 		//Set table column widths
 		tablewidth = 0;
-		int[] posColWidths = {32, 48, 32, 48, 160, 40};
+		int[] posColWidths = {32, 40, 32, 48, 180, 40};
 		for(int col=0; col < posColWidths.length; col++)
 		{
 			posTable.getColumnModel().getColumn(col).setPreferredWidth(posColWidths[col]);
@@ -156,7 +156,17 @@ public class POSView extends JPanel implements ListSelectionListener
         //set up the course panel reset filter button
         JPanel posResetPanel = new JPanel();
         posResetPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        btnResetPOSFilter = new JButton("Reset POS Filters");
+        
+        btnOpen = new JButton("Open");
+        posResetPanel.add(btnOpen);
+        
+        btnSave = new JButton("Save");
+        posResetPanel.add(btnSave);
+        
+        btnExit = new JButton("Exit");
+        posResetPanel.add(btnExit);
+        
+        btnResetPOSFilter = new JButton("Reset");
         posResetPanel.add(btnResetPOSFilter);
          
         posPanel.add(posFilterPanel);

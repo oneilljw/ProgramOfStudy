@@ -1,7 +1,13 @@
 package ProgramOfStudy;
 
-public class Course 
+import java.io.Serializable;
+
+public class Course implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5324765919359280864L;
 	private int semester;
 	private String department;
 	private int number;

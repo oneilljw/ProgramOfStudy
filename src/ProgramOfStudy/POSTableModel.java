@@ -1,5 +1,10 @@
 package ProgramOfStudy;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,6 +53,54 @@ public class POSTableModel extends AbstractTableModel
 			posList.remove(index);
 			this.fireTableDataChanged();
 		}	
+	}
+	
+	void openPOS()
+	{
+		String workingDir = System.getProperty("user.dir");
+		String filename = workingDir + "/Andrew" + ".pos";
+		
+		try
+	    {
+	         FileInputStream fis = new FileInputStream(filename);
+	         ObjectInputStream in = new ObjectInputStream(fis);
+	         posList = (ArrayList<StudentCourse>) in.readObject();
+	         in.close();
+	         fis.close();
+	         fireTableDataChanged();
+	    }
+		catch(IOException i)
+	    {
+	         i.printStackTrace();
+	         return;
+	    }
+		catch(ClassNotFoundException c)
+	    {
+	         System.out.println("Class not found");
+	         c.printStackTrace();
+	         return;
+	    }
+	}
+	
+	void savePOS()
+	{
+		String workingDir = System.getProperty("user.dir");
+		String filename = workingDir + "/Andrew" + ".pos";
+		try
+	    {
+			FileOutputStream fos = new FileOutputStream(filename);
+	        ObjectOutputStream out = new ObjectOutputStream(fos);
+	         
+	        out.writeObject(posList);
+	         
+	        out.close();
+	        fos.close();
+	        System.out.printf("Serialized PoS is saved in /tmp/employee.ser");
+	    }
+		catch(IOException i)
+	    {
+	         i.printStackTrace();
+	    }
 	}
 	
 	@Override
