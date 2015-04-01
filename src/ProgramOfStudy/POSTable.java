@@ -11,14 +11,14 @@ import javax.swing.table.TableModel;
 public class POSTable extends javax.swing.JTable
 {
 	private static final long serialVersionUID = 1L;
+	private static final Color ROW_COLOR = new Color(238,233,233);	//Light Gray
+	
 	private String[] colToolTips;
-	private Color rowColor;
 
-	public POSTable(TableModel tm, String[] colTT, Color rc)
+	public POSTable(TableModel tm, String[] colTT)
 	{
 		super(tm);
 		colToolTips = colTT;
-		rowColor = rc;
 	}
 		
 	public boolean getScrollableTracksViewportWidth() {
@@ -47,7 +47,7 @@ public class POSTable extends javax.swing.JTable
 		if(isRowSelected(Index_row))
 			comp.setBackground(comp.getBackground());
 		else if (Index_row % 2 == 1)			  
-			comp.setBackground(rowColor);
+			comp.setBackground(ROW_COLOR);
 		else
 			comp.setBackground(Color.WHITE);
 			  

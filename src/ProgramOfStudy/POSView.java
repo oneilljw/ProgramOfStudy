@@ -3,6 +3,8 @@ package ProgramOfStudy;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -11,15 +13,18 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.RowFilter;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
+import javax.swing.table.TableRowSorter;
 
-public class POSView extends JPanel implements ListSelectionListener
+public class POSView extends JPanel implements ActionListener, ListSelectionListener
 {
 
 	/**
@@ -29,9 +34,12 @@ public class POSView extends JPanel implements ListSelectionListener
 	private static final int PREFERRED_NUMBER_OF_TABLE_ROWS = 15;
 	
 	private POSTable courseTable, posTable;
-	public JButton btnAdd, btnRemove, btnOpen, btnSave, btnExit;
+	public JButton btnAdd, btnRemove;
+	public JButton btnOpen, btnSave, btnExit;
 	private JButton btnResetCourseFilter, btnResetPOSFilter;
-	public JComboBox concentrationCB, semesterCB, courseNumCB, deptCB, titleCB;
+	public JComboBox concentrationCB, searchTypeCB, deptCB; 
+	public JTextField searchTF;
+	private RowFilter<Object, Object> courseFilter;
 	
 	public POSView(CourseTableModel courseTM, POSTableModel posTM)
 	{
@@ -39,18 +47,28 @@ public class POSView extends JPanel implements ListSelectionListener
 		JPanel cntlPanel = new JPanel();
 		JPanel posPanel = new JPanel();
 		
+		//set up the table filter
+		courseFilter = new RowFilter<Object, Object>() {
+		      public boolean include(Entry entry) {
+		        Integer population = (Integer) entry.getValue(0);
+		        return population.intValue() >= 0;
+		      }
+		    };
+		
 		//set up the course panel
 		coursePanel.setLayout(new BoxLayout(coursePanel, BoxLayout.Y_AXIS));
 		coursePanel.setBorder(BorderFactory.createTitledBorder("Course Catalog"));
 		
 		JPanel couseSearchPanel = new JPanel();
 		couseSearchPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-		JComboBox aconcentrationCB = new JComboBox(Concentration.values());
-		aconcentrationCB.setBorder(BorderFactory.createTitledBorder("Concentration"));
-		couseSearchPanel.add(aconcentrationCB);
+		String[] depts = {"Any","ITEC", "MKTG", "BLAW", "STAT", "MGNT", "ACTG", "ECON", "UVIV", "Core"};
+		deptCB = new JComboBox(depts);
+		deptCB.setBorder(BorderFactory.createTitledBorder("Filter"));
+		deptCB.addActionListener(this);
+		couseSearchPanel.add(deptCB);
 		
 		String[] courseTableTT = {"Semester", "Department", "Course #", "Credit Hours", "Couurse Title"};
-		courseTable = new POSTable(courseTM, courseTableTT, new Color(240,248,255));
+		courseTable = new POSTable(courseTM, courseTableTT);
 
 		courseTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		courseTable.getSelectionModel().addListSelectionListener(this);
@@ -114,26 +132,18 @@ public class POSView extends JPanel implements ListSelectionListener
 		JPanel posSearchPanel = new JPanel();
 		posSearchPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 		
-		String[] semesters = {"0", "1", "2", "3", "4", "5", "6", "7"};
-		semesterCB = new JComboBox(semesters);
-		semesterCB.setBorder(BorderFactory.createTitledBorder("Semester"));
-		posSearchPanel.add(semesterCB);
+		String[] searchType = {"Semester", "Department", "Course #", "Title"};
+		searchTypeCB = new JComboBox(searchType);
+		searchTypeCB.setBorder(BorderFactory.createTitledBorder("Seach Type"));
+		posSearchPanel.add(searchTypeCB);
 		
-		courseNumCB = new JComboBox();
-		courseNumCB.setBorder(BorderFactory.createTitledBorder("Course #"));
-		posSearchPanel.add(courseNumCB);
-		
-		deptCB = new JComboBox();
-		deptCB.setBorder(BorderFactory.createTitledBorder("Dept"));
-		posSearchPanel.add(deptCB);
-		
-		titleCB = new JComboBox();
-		titleCB.setBorder(BorderFactory.createTitledBorder("Title"));
-		posSearchPanel.add(titleCB);
+		searchTF = new JTextField(8);
+		searchTF.setBorder(BorderFactory.createTitledBorder("Search For"));
+		posSearchPanel.add(searchTF);
 		
 		String[] posTableTT = {"Semester", "Department", "Course #", "Credit Hours",
 								"Couurse Title", "Grade"};
-		posTable = new POSTable(posTM, posTableTT, new Color(240,248,255));
+		posTable = new POSTable(posTM, posTableTT);
 
 		posTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		posTable.getSelectionModel().addListSelectionListener(this);
@@ -234,5 +244,15 @@ public class POSView extends JPanel implements ListSelectionListener
 			else
 				btnRemove.setEnabled(false);
 		}
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e)
+	{
+		if(e.getSource() == deptCB)
+		{
+			
+		}
+		
 	}
 }

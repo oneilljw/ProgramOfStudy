@@ -7,6 +7,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.swing.JOptionPane;
 import javax.swing.table.AbstractTableModel;
 
@@ -158,5 +159,17 @@ public class POSTableModel extends AbstractTableModel
     	else	//indicate error and reset table to prior grade
     	{
     	}                      
+    }
+	
+	@Override
+	public Class getColumnClass(int column)
+	{
+        Class returnValue;
+        if ((column >= 0) && (column < getColumnCount()))
+          returnValue = getValueAt(0, column).getClass();
+        else
+          returnValue = Object.class;
+        
+        return returnValue;
     }
 }
