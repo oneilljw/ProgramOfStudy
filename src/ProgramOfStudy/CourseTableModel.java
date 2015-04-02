@@ -20,7 +20,7 @@ public class CourseTableModel extends AbstractTableModel
 	private static final int HOURS_COL = 3;
 	private static final int TITLE_COL = 4;
 	
-	private String[] columnNames = {"Sem", "Dept", "  #  ", "Hrs", "Title"};
+	private String[] columnNames = {"Sem", "Dept", "  #  ", "Hrs", "Course Title"};
 	private Concentration concentration;
 	private List<List<Course>> courseList;
 	
@@ -116,16 +116,4 @@ public class CourseTableModel extends AbstractTableModel
 		else
 			return "Error";
 	}
-	
-	@Override
-	public Class getColumnClass(int column)
-	{
-        Class returnValue;
-        if ((column >= 0) && (column < getColumnCount()))
-          returnValue = getValueAt(0, column).getClass();
-        else
-          returnValue = Object.class;
-        
-        return returnValue;
-    }
 }

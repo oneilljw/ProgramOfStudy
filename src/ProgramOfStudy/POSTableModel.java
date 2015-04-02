@@ -7,8 +7,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.JOptionPane;
 import javax.swing.table.AbstractTableModel;
 
 public class POSTableModel extends AbstractTableModel
@@ -25,7 +23,7 @@ public class POSTableModel extends AbstractTableModel
 	private static final int GRADE_COL = 5;
 	private static final String VALID_GRADES = "ABCDEF";
 	
-	private String[] columnNames = {"Sem", "Dept", "#", "Hrs", "Title", "Grade"};
+	private String[] columnNames = {"Sem", "Dept", "  #  ", "Hrs", "Course Title", "Grade"};
 	private List<StudentCourse> posList;
 	
 	public POSTableModel()
@@ -54,7 +52,7 @@ public class POSTableModel extends AbstractTableModel
 		{
 			posList.remove(index);
 			this.fireTableDataChanged();
-		}	
+		}
 	}
 	
 	void openPOS()
@@ -74,13 +72,11 @@ public class POSTableModel extends AbstractTableModel
 		catch(IOException i)
 	    {
 	         i.printStackTrace();
-	         return;
 	    }
 		catch(ClassNotFoundException c)
 	    {
 	         System.out.println("Class not found");
 	         c.printStackTrace();
-	         return;
 	    }
 	}
 	
@@ -97,7 +93,6 @@ public class POSTableModel extends AbstractTableModel
 	         
 	        out.close();
 	        fos.close();
-	        System.out.printf("Serialized PoS is saved in /tmp/employee.ser");
 	    }
 		catch(IOException i)
 	    {
@@ -139,7 +134,7 @@ public class POSTableModel extends AbstractTableModel
 	@Override
 	public boolean isCellEditable(int row, int col)
     {
-        return col == GRADE_COL;	//Only the grade column is editable
+		return col == GRADE_COL;	//Only the grade column is editable
     }
 	
 	//Don't need to implement this method unless your table's data can change.
@@ -159,17 +154,5 @@ public class POSTableModel extends AbstractTableModel
     	else	//indicate error and reset table to prior grade
     	{
     	}                      
-    }
-	
-	@Override
-	public Class getColumnClass(int column)
-	{
-        Class returnValue;
-        if ((column >= 0) && (column < getColumnCount()))
-          returnValue = getValueAt(0, column).getClass();
-        else
-          returnValue = Object.class;
-        
-        return returnValue;
     }
 }

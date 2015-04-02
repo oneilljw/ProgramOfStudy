@@ -4,12 +4,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 
-public class POSController implements ActionListener
+public class POSController implements ActionListener, TableModelListener
 {
 	//view components
 	private JFrame posFrame;
@@ -18,12 +21,15 @@ public class POSController implements ActionListener
 	//controller components - they use the Course and StudentCourse model classes
 	private CourseTableModel courseTM;
 	private POSTableModel posTM;
+	private boolean bPOSChanged;
 
 	public POSController()
 	{
 		//initialize controller components
 		courseTM = new CourseTableModel();
 		posTM = new POSTableModel();
+		posTM.addTableModelListener(this);
+		bPOSChanged = false;
 		
 		//initialize view component
 		createAndShowView();
@@ -83,6 +89,8 @@ public class POSController implements ActionListener
 				Course selCourse = courseTM.getCourse(modelRow);
 				StudentCourse sc = new StudentCourse(selCourse);
 				posTM.addCourse(sc);
+				bPOSChanged = true;
+				posView.btnSave.setEnabled(true);
 			}
 		}
 		else if(e.getSource() == posView.btnRemove)
@@ -93,6 +101,8 @@ public class POSController implements ActionListener
 			{
 				StudentCourse selCourse = posTM.getStudentCourse(modelRow);
 				posTM.removeCourse(selCourse);
+				bPOSChanged = true;
+				posView.btnSave.setEnabled(true);
 			}
 		}
 		else if(e.getSource() == posView.btnSave)
@@ -110,5 +120,14 @@ public class POSController implements ActionListener
 		SwingUtilities.invokeLater(new Runnable() {
             public void run() { new POSController(); }
 		});
+	}
+
+	@Override
+	public void tableChanged(TableModelEvent tme)
+	{
+		if(tme.getSource() == posTM && tme.getType() == TableModelEvent.UPDATE && tme.getColumn() == 5)
+		{
+			System.out.println("posTable: grade changed in row: " + tme.getFirstRow());
+		}
 	}
 }

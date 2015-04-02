@@ -36,10 +36,12 @@ public class POSView extends JPanel implements ActionListener, ListSelectionList
 	private POSTable courseTable, posTable;
 	public JButton btnAdd, btnRemove;
 	public JButton btnOpen, btnSave, btnExit;
-	private JButton btnResetCourseFilter, btnResetPOSFilter;
+	private JButton btnClearCourseSearch, btnClearPOSSearch;
 	public JComboBox concentrationCB, searchTypeCB, deptCB; 
-	public JTextField searchTF;
-	private RowFilter<Object, Object> courseFilter;
+	public JTextField courseSearchTF, posSearchTF;
+	private TableRowSorter<CourseTableModel> courseTableRowSorter;
+	private TableRowSorter<POSTableModel> posTableRowSorter;
+
 	
 	public POSView(CourseTableModel courseTM, POSTableModel posTM)
 	{
@@ -47,27 +49,24 @@ public class POSView extends JPanel implements ActionListener, ListSelectionList
 		JPanel cntlPanel = new JPanel();
 		JPanel posPanel = new JPanel();
 		
-		//set up the table filter
-		courseFilter = new RowFilter<Object, Object>() {
-		      public boolean include(Entry entry) {
-		        Integer population = (Integer) entry.getValue(0);
-		        return population.intValue() >= 0;
-		      }
-		    };
-		
 		//set up the course panel
 		coursePanel.setLayout(new BoxLayout(coursePanel, BoxLayout.Y_AXIS));
 		coursePanel.setBorder(BorderFactory.createTitledBorder("Course Catalog"));
 		
-		JPanel couseSearchPanel = new JPanel();
-		couseSearchPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-		String[] depts = {"Any","ITEC", "MKTG", "BLAW", "STAT", "MGNT", "ACTG", "ECON", "UVIV", "Core"};
-		deptCB = new JComboBox(depts);
-		deptCB.setBorder(BorderFactory.createTitledBorder("Filter"));
-		deptCB.addActionListener(this);
-		couseSearchPanel.add(deptCB);
+		JPanel courseSearchPanel = new JPanel();
+		courseSearchPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		
-		String[] courseTableTT = {"Semester", "Department", "Course #", "Credit Hours", "Couurse Title"};
+		courseSearchPanel.add(new JLabel("Search For:"));
+		
+		courseSearchTF = new JTextField(15);
+		courseSearchTF.addActionListener(this);
+		courseSearchPanel.add(courseSearchTF);
+		
+		btnClearCourseSearch = new JButton("Clear");
+		btnClearCourseSearch.addActionListener(this);
+		courseSearchPanel.add(btnClearCourseSearch);
+		
+		String[] courseTableTT = {"Semester", "Department", "Course #", "Credit Hours", "Course Title"};
 		courseTable = new POSTable(courseTM, courseTableTT);
 
 		courseTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -75,7 +74,7 @@ public class POSView extends JPanel implements ActionListener, ListSelectionList
 		
 		//Set table column widths
 		int tablewidth = 0;
-		int[] colWidths = {28, 36, 28, 28, 200};
+		int[] colWidths = {28, 36, 28, 28, 240};
 		for(int col=0; col < colWidths.length; col++)
 		{
 			courseTable.getColumnModel().getColumn(col).setPreferredWidth(colWidths[col]);
@@ -83,7 +82,8 @@ public class POSView extends JPanel implements ActionListener, ListSelectionList
 		}
 		tablewidth += 24; 	//count for vertical scroll bar
 		
-        courseTable.setAutoCreateRowSorter(true);	//add a sorter
+		courseTableRowSorter = new TableRowSorter<CourseTableModel>(courseTM);
+        courseTable.setRowSorter(courseTableRowSorter);	//add a sorter
         
         JTableHeader anHeader = courseTable.getTableHeader();
         anHeader.setForeground( Color.black);
@@ -110,7 +110,7 @@ public class POSView extends JPanel implements ActionListener, ListSelectionList
         concentrationPanel.add(lblConcentration);
         concentrationPanel.add(concentrationCB);
          
-        coursePanel.add(couseSearchPanel);
+        coursePanel.add(courseSearchPanel);
         coursePanel.add(courseScrollPane);
         coursePanel.add(concentrationPanel);
         
@@ -130,16 +130,17 @@ public class POSView extends JPanel implements ActionListener, ListSelectionList
 		posPanel.setBorder(BorderFactory.createTitledBorder("Student Program of Study"));
 		
 		JPanel posSearchPanel = new JPanel();
-		posSearchPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+		posSearchPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		
-		String[] searchType = {"Semester", "Department", "Course #", "Title"};
-		searchTypeCB = new JComboBox(searchType);
-		searchTypeCB.setBorder(BorderFactory.createTitledBorder("Seach Type"));
-		posSearchPanel.add(searchTypeCB);
+		posSearchPanel.add(new JLabel("Search For:"));
 		
-		searchTF = new JTextField(8);
-		searchTF.setBorder(BorderFactory.createTitledBorder("Search For"));
-		posSearchPanel.add(searchTF);
+		posSearchTF = new JTextField(15);
+		posSearchTF.addActionListener(this);
+		posSearchPanel.add(posSearchTF);
+		
+		btnClearPOSSearch = new JButton("Clear");
+		btnClearPOSSearch.addActionListener(this);
+		posSearchPanel.add(btnClearPOSSearch);
 		
 		String[] posTableTT = {"Semester", "Department", "Course #", "Credit Hours",
 								"Couurse Title", "Grade"};
@@ -150,7 +151,7 @@ public class POSView extends JPanel implements ActionListener, ListSelectionList
 		
 		//Set table column widths
 		tablewidth = 0;
-		int[] posColWidths = {28, 36, 28, 28, 200, 32};
+		int[] posColWidths = {28, 36, 28, 28, 240, 48};
 		for(int col=0; col < posColWidths.length; col++)
 		{
 			posTable.getColumnModel().getColumn(col).setPreferredWidth(posColWidths[col]);
@@ -158,7 +159,8 @@ public class POSView extends JPanel implements ActionListener, ListSelectionList
 		}
 		tablewidth += 24; 	//count for vertical scroll bar
 		
-        posTable.setAutoCreateRowSorter(true);	//add a sorter
+		posTableRowSorter = new TableRowSorter<POSTableModel>(posTM);
+		posTable.setRowSorter(posTableRowSorter);	//add a sorter
         
         JTableHeader posHeader = posTable.getTableHeader();
         posHeader.setForeground( Color.black);
@@ -186,13 +188,11 @@ public class POSView extends JPanel implements ActionListener, ListSelectionList
         posResetPanel.add(btnOpen);
         
         btnSave = new JButton("Save");
+        btnSave.setEnabled(false);	//no POS data when constructor executes
         posResetPanel.add(btnSave);
         
         btnExit = new JButton("Exit");
         posResetPanel.add(btnExit);
-        
-        btnResetPOSFilter = new JButton("Reset");
-        posResetPanel.add(btnResetPOSFilter);
          
         posPanel.add(posSearchPanel);
         posPanel.add(posScrollPane);
@@ -249,10 +249,33 @@ public class POSView extends JPanel implements ActionListener, ListSelectionList
 	@Override
 	public void actionPerformed(ActionEvent e)
 	{
-		if(e.getSource() == deptCB)
+		if(e.getSource() == courseSearchTF)
 		{
+			String searchText = courseSearchTF.getText();
 			
+			if(searchText.isEmpty())
+				courseTableRowSorter.setRowFilter(null);
+			else
+				courseTableRowSorter.setRowFilter(RowFilter.regexFilter(searchText));
 		}
-		
+		else if(e.getSource() == btnClearCourseSearch)
+		{
+			courseSearchTF.setText("");
+			courseTableRowSorter.setRowFilter(null);
+		}
+		else if(e.getSource() == posSearchTF)
+		{
+			String searchText = posSearchTF.getText();
+
+			if(searchText.isEmpty())
+				posTableRowSorter.setRowFilter(null);
+			else
+				posTableRowSorter.setRowFilter(RowFilter.regexFilter(searchText));
+		}
+		else if(e.getSource() == btnClearPOSSearch)
+		{
+			posSearchTF.setText("");
+			posTableRowSorter.setRowFilter(null);
+		}
 	}
 }
