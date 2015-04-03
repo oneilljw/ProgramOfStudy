@@ -15,7 +15,7 @@ import javax.swing.event.TableModelListener;
 public class POSController implements ActionListener, TableModelListener
 {
 	//view components
-	private JFrame posFrame;
+	private static JFrame posFrame;
 	private POSView posView;
 	
 	//controller components - they use the Course and StudentCourse model classes
@@ -38,12 +38,12 @@ public class POSController implements ActionListener, TableModelListener
 	void createAndShowView()
     {
     	posFrame = new JFrame("Program Of Study");
-		posFrame.addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent we)
-			 {
-				exit("QUIT");			  
-			 }});
-        posFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);	//On close, user is prompted to confirm
+//		posFrame.addWindowListener(new WindowAdapter() {
+//			public void windowClosing(WindowEvent we)
+//			 {
+//				exit("QUIT");			  
+//			 }});
+        posFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	//On close, user is prompted to confirm
 //      posFrame.setMinimumSize(new Dimension(1050, 600));
         posFrame.setLocationByPlatform(true);
 
@@ -66,11 +66,6 @@ public class POSController implements ActionListener, TableModelListener
         posFrame.pack();
         posFrame.setVisible(true);
     }
-	
-	void exit(String command)
-	{
-	   	System.exit(0);
-	}
 	
 	@Override
 	public void actionPerformed(ActionEvent e)
@@ -113,7 +108,13 @@ public class POSController implements ActionListener, TableModelListener
 		{
 			posTM.openPOS();
 		}
+		else if(e.getSource() == posView.btnExit)
+		{
+			System.exit(0);
+		}
 	}
+	
+	static JFrame getFrame() { return posFrame; }
 
 	public static void main(String[] args) 
 	{

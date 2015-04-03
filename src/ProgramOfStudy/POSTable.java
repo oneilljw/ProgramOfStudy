@@ -3,7 +3,7 @@ package ProgramOfStudy;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.MouseEvent;
-
+import javax.swing.JTable;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
@@ -18,9 +18,10 @@ public class POSTable extends javax.swing.JTable
 	public POSTable(TableModel tm, String[] colTT)
 	{
 		super(tm);
+		autoResizeMode = JTable.AUTO_RESIZE_OFF;
 		colToolTips = colTT;
 	}
-		
+	
 	public boolean getScrollableTracksViewportWidth() {
 		return getPreferredSize().width < getParent().getWidth();
 	}

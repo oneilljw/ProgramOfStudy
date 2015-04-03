@@ -1,5 +1,6 @@
 package ProgramOfStudy;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -7,6 +8,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.AbstractTableModel;
 
 public class POSTableModel extends AbstractTableModel
@@ -21,7 +25,7 @@ public class POSTableModel extends AbstractTableModel
 	private static final int HOURS_COL = 3;
 	private static final int TITLE_COL = 4;
 	private static final int GRADE_COL = 5;
-	private static final String VALID_GRADES = "ABCDEF";
+	private static final String VALID_GRADES = "ABCDEFN";
 	
 	private String[] columnNames = {"Sem", "Dept", "  #  ", "Hrs", "Course Title", "Grade"};
 	private List<StudentCourse> posList;
@@ -57,48 +61,79 @@ public class POSTableModel extends AbstractTableModel
 	
 	void openPOS()
 	{
-		String workingDir = System.getProperty("user.dir");
-		String filename = workingDir + "/Andrew" + ".pos";
-		
-		try
-	    {
-	         FileInputStream fis = new FileInputStream(filename);
-	         ObjectInputStream in = new ObjectInputStream(fis);
-	         posList = (ArrayList<StudentCourse>) in.readObject();
-	         in.close();
-	         fis.close();
-	         fireTableDataChanged();
-	    }
-		catch(IOException i)
-	    {
-	         i.printStackTrace();
-	    }
-		catch(ClassNotFoundException c)
-	    {
-	         System.out.println("Class not found");
-	         c.printStackTrace();
-	    }
+		File readFile = getFile("Select File to Open", true);
+		if(readFile != null)
+		{
+			try
+			{
+				FileInputStream fis = new FileInputStream(readFile);
+				ObjectInputStream in = new ObjectInputStream(fis);
+				posList = (ArrayList<StudentCourse>) in.readObject();
+				in.close();
+				fis.close();
+				fireTableDataChanged();
+			}
+			catch(IOException i)
+			{
+				i.printStackTrace();
+			}
+			catch(ClassNotFoundException c)
+			{
+				System.out.println("Class not found");
+				c.printStackTrace();
+			}
+		}
 	}
 	
 	void savePOS()
 	{
-		String workingDir = System.getProperty("user.dir");
-		String filename = workingDir + "/Andrew" + ".pos";
-		try
-	    {
-			FileOutputStream fos = new FileOutputStream(filename);
-	        ObjectOutputStream out = new ObjectOutputStream(fos);
+		File writeFile = getFile("Select File to Save to", false);
+		
+		if(writeFile != null)
+		{
+			try
+			{
+				FileOutputStream fos = new FileOutputStream(writeFile);
+				ObjectOutputStream out = new ObjectOutputStream(fos);
 	         
-	        out.writeObject(posList);
+				out.writeObject(posList);
 	         
-	        out.close();
-	        fos.close();
-	    }
-		catch(IOException i)
-	    {
-	         i.printStackTrace();
-	    }
+				out.close();
+				fos.close();
+			}
+			catch(IOException i)
+			{
+				i.printStackTrace();
+			}
+		}
 	}
+	
+	public File getFile(String title, boolean bOpenFile)
+    {
+    	//Create the chooser
+    	JFileChooser chooser = new JFileChooser();
+    	
+    	//Set the dialog title
+    	chooser.setDialogTitle(title);
+    	
+    	//Set the filter
+    	chooser.setFileFilter(new FileNameExtensionFilter("POS Files", "pos"));
+    	
+	    //Show dialog and return File object if user approves selection, else return a
+    	//null File object if user cancels or an error occurs
+    	int returnVal;
+    	if(bOpenFile)
+    		returnVal = chooser.showOpenDialog(POSController.getFrame());
+    	else
+    		returnVal = chooser.showSaveDialog(POSController.getFrame());
+	    
+	    if(returnVal == JFileChooser.APPROVE_OPTION)
+	    {
+	    	return chooser.getSelectedFile();
+	    }
+	    else
+	    	return null;
+    }
 	
 	@Override
 	public int getColumnCount() { return columnNames.length; }

@@ -5,7 +5,6 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -99,8 +98,9 @@ public class POSView extends JPanel implements ActionListener, ListSelectionList
         Dimension tablesize = new Dimension(tablewidth, courseTable.getRowHeight() *
         										PREFERRED_NUMBER_OF_TABLE_ROWS);
         courseTable.setPreferredScrollableViewportSize(tablesize);
-        JScrollPane courseScrollPane = new JScrollPane(courseTable);
-        courseScrollPane.setBorder(UIManager.getBorder("Table.scrollPaneBorder"));
+        JScrollPane courseScrollPane = new JScrollPane(courseTable,
+        	JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+//      courseScrollPane.setBorder(UIManager.getBorder("Table.scrollPaneBorder"));
         
         //set up the course panel reset filter button
         JPanel concentrationPanel = new JPanel();
@@ -177,8 +177,9 @@ public class POSView extends JPanel implements ActionListener, ListSelectionList
         Dimension postablesize = new Dimension(tablewidth, posTable.getRowHeight() *
         										PREFERRED_NUMBER_OF_TABLE_ROWS);
         posTable.setPreferredScrollableViewportSize(postablesize);
-        JScrollPane posScrollPane = new JScrollPane(posTable);
-        posScrollPane.setBorder(UIManager.getBorder("Table.scrollPaneBorder"));
+        JScrollPane posScrollPane = new JScrollPane(posTable,
+        	JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+//      posScrollPane.setBorder(UIManager.getBorder("Table.scrollPaneBorder"));
         
         //set up the course panel reset filter button
         JPanel posResetPanel = new JPanel();
