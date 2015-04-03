@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.AbstractTableModel;
 
@@ -75,12 +76,15 @@ public class POSTableModel extends AbstractTableModel
 			}
 			catch(IOException i)
 			{
-				i.printStackTrace();
+				JOptionPane.showMessageDialog(POSController.getFrame(), "Unable to open file", 
+						"Unable to open file",  
+						JOptionPane.ERROR_MESSAGE, POSController.getLogo());
 			}
 			catch(ClassNotFoundException c)
 			{
-				System.out.println("Class not found");
-				c.printStackTrace();
+				JOptionPane.showMessageDialog(POSController.getFrame(), "Unable to open file", 
+						"Unable to open file",  
+						JOptionPane.ERROR_MESSAGE, POSController.getLogo());
 			}
 		}
 	}
@@ -103,7 +107,10 @@ public class POSTableModel extends AbstractTableModel
 			}
 			catch(IOException i)
 			{
-				i.printStackTrace();
+				//display an error message that update request failed
+				JOptionPane.showMessageDialog(POSController.getFrame(), "Unable to save file", 
+						"Unable to save file",  
+						JOptionPane.ERROR_MESSAGE, POSController.getLogo());
 			}
 		}
 	}
@@ -188,6 +195,10 @@ public class POSTableModel extends AbstractTableModel
     	}
     	else	//indicate error and reset table to prior grade
     	{
+    		//display an error message that the grade isn't valid
+			JOptionPane.showMessageDialog(POSController.getFrame(),
+					"Invalid Grade", "Please enter a valid grade",  
+					JOptionPane.ERROR_MESSAGE, POSController.getLogo());
     	}                      
     }
 }

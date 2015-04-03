@@ -16,7 +16,6 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
 import javax.swing.SwingConstants;
-import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -100,7 +99,6 @@ public class POSView extends JPanel implements ActionListener, ListSelectionList
         courseTable.setPreferredScrollableViewportSize(tablesize);
         JScrollPane courseScrollPane = new JScrollPane(courseTable,
         	JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-//      courseScrollPane.setBorder(UIManager.getBorder("Table.scrollPaneBorder"));
         
         //set up the course panel reset filter button
         JPanel concentrationPanel = new JPanel();
@@ -179,8 +177,7 @@ public class POSView extends JPanel implements ActionListener, ListSelectionList
         posTable.setPreferredScrollableViewportSize(postablesize);
         JScrollPane posScrollPane = new JScrollPane(posTable,
         	JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-//      posScrollPane.setBorder(UIManager.getBorder("Table.scrollPaneBorder"));
-        
+
         //set up the course panel reset filter button
         JPanel posResetPanel = new JPanel();
         posResetPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));

@@ -2,18 +2,19 @@ package ProgramOfStudy;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
 public class POSController implements ActionListener, TableModelListener
 {
+	//Program of Study Image Icon
+	private static ImageIcon posIcon;
+	
 	//view components
 	private static JFrame posFrame;
 	private POSView posView;
@@ -21,30 +22,26 @@ public class POSController implements ActionListener, TableModelListener
 	//controller components - they use the Course and StudentCourse model classes
 	private CourseTableModel courseTM;
 	private POSTableModel posTM;
-	private boolean bPOSChanged;
 
 	public POSController()
 	{
-		//initialize controller components
+		//construct POS logo
+		posIcon = createImageIcon("poslogo.gif", "POS Logo");
+		
+		//construct controller components
 		courseTM = new CourseTableModel();
 		posTM = new POSTableModel();
 		posTM.addTableModelListener(this);
-		bPOSChanged = false;
 		
-		//initialize view component
+		//construct view and show
 		createAndShowView();
 	}
 
 	void createAndShowView()
     {
     	posFrame = new JFrame("Program Of Study");
-//		posFrame.addWindowListener(new WindowAdapter() {
-//			public void windowClosing(WindowEvent we)
-//			 {
-//				exit("QUIT");			  
-//			 }});
+
         posFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	//On close, user is prompted to confirm
-//      posFrame.setMinimumSize(new Dimension(1050, 600));
         posFrame.setLocationByPlatform(true);
 
         //Fetch the content panel for the frame and add components to it.
@@ -84,7 +81,7 @@ public class POSController implements ActionListener, TableModelListener
 				Course selCourse = courseTM.getCourse(modelRow);
 				StudentCourse sc = new StudentCourse(selCourse);
 				posTM.addCourse(sc);
-				bPOSChanged = true;
+
 				posView.btnSave.setEnabled(true);
 			}
 		}
@@ -96,7 +93,7 @@ public class POSController implements ActionListener, TableModelListener
 			{
 				StudentCourse selCourse = posTM.getStudentCourse(modelRow);
 				posTM.removeCourse(selCourse);
-				bPOSChanged = true;
+
 				posView.btnSave.setEnabled(true);
 			}
 		}
@@ -114,14 +111,17 @@ public class POSController implements ActionListener, TableModelListener
 		}
 	}
 	
+	 /** Returns an ImageIcon, or null if the path was invalid. */
+   	ImageIcon createImageIcon(String path, String description)
+   	{
+   		java.net.URL imgURL = getClass().getResource(path);
+   		if (imgURL != null) { return new ImageIcon(imgURL, description); } 
+   		else { System.err.println("Couldn't find file: " + path); return null; }
+   	}
+	
 	static JFrame getFrame() { return posFrame; }
-
-	public static void main(String[] args) 
-	{
-		SwingUtilities.invokeLater(new Runnable() {
-            public void run() { new POSController(); }
-		});
-	}
+	
+	static ImageIcon getLogo() { return posIcon; }
 
 	@Override
 	public void tableChanged(TableModelEvent tme)
